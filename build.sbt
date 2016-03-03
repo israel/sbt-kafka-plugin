@@ -41,3 +41,33 @@ lazy val resources = (project in file("./resources")).
     publishArtifact in (Compile, packageSrc) := false
   )
 
+
+publishTo := {
+  val nexus = "https://oss.sonatype.org/"
+  if (isSnapshot.value) Some("snapshots" at nexus + "content/repositories/snapshots")
+  else                  Some("releases" at nexus + "service/local/staging/deploy/maven2")
+}
+
+publishMavenStyle := true
+
+publishArtifact in Test := false
+publishArtifact in (Compile, packageSrc) :=  true
+
+pomIncludeRepository := { x => false }
+
+homepage := Some(url("http://github.com/israel/sbt-kafka-plugin"))
+
+licenses := Seq("The MIT License (MIT)" -> url("http://opensource.org/licenses/MIT"))
+
+pomExtra := (
+  <scm>
+    <url>https://github.com/israel/sbt-kafka-plugin</url>
+    <connection>scm:git@github.com:israel/sbt-kafka-plugin.git</connection>
+  </scm>
+    <developers>
+      <developer>
+        <id>israel</id>
+        <name>Israel Klein</name>
+      </developer>
+    </developers>
+  )
