@@ -2,7 +2,40 @@
 lazy val commonSettings = Seq(
   shellPrompt := { s => Project.extract(s).currentProject.id + " > " },
   version := "0.1",
-  organization := "com.github.israel"
+  organization := "com.github.israel",
+  publishTo := {
+    val nexus = "https://oss.sonatype.org/"
+    if (isSnapshot.value) Some("snapshots" at nexus + "content/repositories/snapshots")
+    else                  Some("releases" at nexus + "service/local/staging/deploy/maven2")
+  },
+
+  publishMavenStyle := true,
+
+  publishArtifact in Test := false,
+
+  publishArtifact in (Compile, packageSrc) :=  true,
+
+  publishArtifact in (Compile, packageDoc) := true,
+
+  pomIncludeRepository := { x => false },
+
+  homepage := Some(url("http://github.com/israel/sbt-kafka-plugin")),
+
+  licenses := Seq("The MIT License (MIT)" -> url("http://opensource.org/licenses/MIT")),
+
+  pomExtra := (
+    <scm>
+      <connection>scm:git:git@github.com:israel/sbt-kafka-plugin.git</connection>
+      <developerConnection>scm:git:git@github.com:israel/sbt-kafka-plugin.git</developerConnection>
+      <url>https://github.com/israel/sbt-kafka-plugin</url>
+    </scm>
+      <developers>
+        <developer>
+          <name>Israel Klein</name>
+          <email>israel.klein@gmail.com</email>
+        </developer>
+      </developers>
+    )
 )
 
 val resourcesProjectName = "sbt-kafka-plugin-resources"
@@ -28,47 +61,13 @@ lazy val root = (project in file(".")).
            |}
       """.stripMargin)
       Seq(file)
-    },
-    publishTo := {
-      val nexus = "https://oss.sonatype.org/"
-      if (isSnapshot.value) Some("snapshots" at nexus + "content/repositories/snapshots")
-      else                  Some("releases" at nexus + "service/local/staging/deploy/maven2")
-    },
-
-    publishMavenStyle := true,
-
-    publishArtifact in Test := false,
-    publishArtifact in (Compile, packageSrc) :=  true,
-
-    pomIncludeRepository := { x => false },
-
-    homepage := Some(url("http://github.com/israel/sbt-kafka-plugin")),
-
-    licenses := Seq("The MIT License (MIT)" -> url("http://opensource.org/licenses/MIT")),
-
-    pomExtra := (
-      <scm>
-        <connection>scm:git:git@github.com:israel/sbt-kafka-plugin.git</connection>
-        <developerConnection>scm:git:git@github.com:israel/sbt-kafka-plugin.git</developerConnection>
-        <url>https://github.com/israel/sbt-kafka-plugin</url>
-      </scm>
-        <developers>
-          <developer>
-            <name>Israel Klein</name>
-            <email>israel.klein@gmail.com</email>
-          </developer>
-        </developers>
-      )
+    }
   ).aggregate(resources)
 
 lazy val resources = (project in file("./resources")).
   settings(commonSettings : _*).
   settings(
-    name := resourcesProjectName,
-    // disable publishing the main API jar
-    publishArtifact in (Compile, packageDoc) := false,
-    // disable publishing the main sources jar
-    publishArtifact in (Compile, packageSrc) := false,
+    name := resourcesProjectName
   )
 
 
