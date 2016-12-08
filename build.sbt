@@ -1,7 +1,7 @@
 
 lazy val commonSettings = Seq(
   shellPrompt := { s => Project.extract(s).currentProject.id + " > " },
-  version := "0.1",
+  version := "0.4",
   organization := "com.github.israel",
   publishTo := {
     val nexus = "https://oss.sonatype.org/"
